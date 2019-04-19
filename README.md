@@ -21,7 +21,7 @@ You need to include **snake.css** and **snake.min.js** in your head tag:
 <script src="./dist/snake.min.js"></script>
 ```
 
-First you need to add game container in your body tag:
+Then add game container to body tag:
 ```html
 <div id="game-container"></div>
 ```
@@ -43,8 +43,8 @@ And that's it. See [Documentation](#documentation) section for controls and opti
 - **DOWN ARROW** - move down,
 - **LEFT ARROW** - move left,
 - **RIGHT ARROW** - move right,
-- **Z** - decrease game level,
-- **X** - increase game level.
+- **Z** - decrease game level/speed,
+- **X** - increase game level/speed.
 
 ###### Options
 There is a few options that can be used to change game settings.
@@ -52,7 +52,7 @@ There is a few options that can be used to change game settings.
 new Game('#game-container', {SPEED: 5, BOARD_WIDTH: 20, BOARD_HEIGHT: 10});
 ```
 Available options:
-- **SPEED** - speed for game start (default: 1, range: 1-10),
+- **SPEED** - initial speed for game start (default: 1, range: 1-10),
 - **BOARD_WIDTH** - width of the game board (default: 20, range: 10-40),
 - **DOWN ARROW** - height of the game board (default: 10, range: 5-20).
 
