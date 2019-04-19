@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="./styles/snake.css" />
+		<script src="./dist/snake.min.js"></script>
+	</head>
+	<body>
+		<div id="game-container"></div>
+		<script>
+			function onDocumentLoad() {
+			   //new Game('#game-container', {SPEED: 1, BOARD_WIDTH: 20, BOARD_HEIGHT: 10});
+				new Game('#game-container');
+			}
+			document.addEventListener('DOMContentLoaded', onDocumentLoad);
+		</script>
+	</body>
+</html>

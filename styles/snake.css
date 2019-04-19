@@ -1,0 +1,44 @@
+html, body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#game-container {
+		margin: auto;
+}
+
+#game-container .container {
+   position: relative;
+   background-color: #95B484;
+   overflow: hidden;
+   margin: 0;
+   padding: 0;
+   -webkit-border-radius: 7px;
+   -moz-border-radius: 7px;
+   border-radius: 7px;
+}
+
+#game-container .border_background {
+   position: absolute;
+   background-color: #4B5844;
+   display: block;
+}
+
+#game-container .sprite_background {
+   position: absolute;
+   background-color: #4B5844;
+   display: block;
+   -webkit-border-radius: 7px;
+   -moz-border-radius: 7px;
+   border-radius: 7px;
+}
+
+#game-container .food_background {
+   position: absolute;
+   background-image: url(../images/food.png);
+   background-size: cover;
+   display: block;
+}
+
+#game-container .progress {
+   text-align: center;
+}
