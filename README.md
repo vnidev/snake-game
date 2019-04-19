@@ -12,7 +12,7 @@ Retro snake game created in javascript.
 
 ![Snake game](./documentation/game_screen.jpg)
 
-I created this game to use it as a long loading forms loader but some bosses didn't agree with me :-) so feel free to use it as you like. For those who don't know the rules of the game (if they exist), the rules are simple. You need to eat food to grow and avoid hitting the walls and yourself. The bigger you are, the more difficult will be. So, take fun and good luck.
+I created this game to use it as a loader for long running reports but some bosses didn't agree with me :-) so feel free to use it as you like. For those who don't know the rules of the game (if they exists), the rules are simple. You need to eat food to grow and avoid hitting the walls and yourself. The bigger you are, the more difficult will be. So, take fun and good luck.
 
 ## Quick start
 You need to include **snake.css** and **snake.min.js** in your head tag:

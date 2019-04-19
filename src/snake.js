@@ -1,5 +1,5 @@
 (function () {
-	var Direction = {
+	var Dir = { // direction enum
 	   up: 0,
 	   down: 1,
 	   left: 2,
@@ -10,105 +10,105 @@
 	* Game object constructor
 	*
 	* @example
-	*  var game = new Game(containerElement, opt_config);
+	*  var game = new Game(containerElement, cfg);
 	*
 	* @param containerElement {Object} container object div for adding elements
-	* @param opt_config {Object} game options for ovveride Game.config
+	* @param cfg {Object} game options for ovveride Game.config
 	*/
-	function Game(containerElement, opt_config) {
-      if (Game.instance_) {
-		   return Game.instance_;
+	function Game(containerElement, cfg) {
+      if (Game.i_) { // Game instance
+		   return Game.i_;
 		}
-		Game.instance_ = this;
+		Game.i_ = this;
 
-		if (opt_config)
+		if (cfg)
 		{
-			if (!opt_config.SPEED) opt_config.SPEED = Game.config.SPEED;
-			else if (opt_config.SPEED > 10 ) opt_config.SPEED = 10;
-			else if (opt_config.SPEED < 1 ) opt_config.SPEED = 1;
+			if (!cfg.SPEED) cfg.SPEED = Game.config.SPEED;
+			else if (cfg.SPEED > 10 ) cfg.SPEED = 10;
+			else if (cfg.SPEED < 1 ) cfg.SPEED = 1;
 
-			if (!opt_config.BOARD_WIDTH) opt_config.BOARD_WIDTH = Game.config.BOARD_WIDTH;
-			else if (opt_config.BOARD_WIDTH > 40 ) opt_config.BOARD_WIDTH = 40;
-			else if (opt_config.BOARD_WIDTH < 10 ) opt_config.BOARD_WIDTH = 10;
+			if (!cfg.BOARD_WIDTH) cfg.BOARD_WIDTH = Game.config.BOARD_WIDTH;
+			else if (cfg.BOARD_WIDTH > 40 ) cfg.BOARD_WIDTH = 40;
+			else if (cfg.BOARD_WIDTH < 10 ) cfg.BOARD_WIDTH = 10;
 
-			if (!opt_config.BOARD_HEIGHT) opt_config.BOARD_HEIGHT = Game.config.BOARD_HEIGHT;
-			else if (opt_config.BOARD_HEIGHT > 20 ) opt_config.BOARD_HEIGHT = 20;
-			else if (opt_config.BOARD_HEIGHT < 5 ) opt_config.BOARD_HEIGHT = 5;
+			if (!cfg.BOARD_HEIGHT) cfg.BOARD_HEIGHT = Game.config.BOARD_HEIGHT;
+			else if (cfg.BOARD_HEIGHT > 20 ) cfg.BOARD_HEIGHT = 20;
+			else if (cfg.BOARD_HEIGHT < 5 ) cfg.BOARD_HEIGHT = 5;
 		}
 
-		Game.instance_.config = opt_config || Game.config;
-		Game.instance_.params = Game.params;
+		Game.i_.config = cfg || Game.config;
+		Game.i_.params = Game.params;
 
-		Game.instance_.params.SPEED = Game.instance_.config.SPEED;
-		Game.instance_.config.BOARD_HEIGHT += 2;
-		Game.instance_.config.BOARD_WIDTH += 2;
+		Game.i_.params.SPEED = Game.i_.config.SPEED;
+		Game.i_.config.BOARD_HEIGHT += 2;
+		Game.i_.config.BOARD_WIDTH += 2;
 
-		this.rootDiv = document.querySelector(containerElement);
+		var rootDiv = document.querySelector(containerElement);
 
-		var page_width = window.innerWidth;
-		var page_height = window.innerHeight;
-		if ((page_width < Game.instance_.config.BOARD_WIDTH * Game.instance_.params.PIECE_WIDTH + 20) ||
-			(page_height < Game.instance_.config.BOARD_HEIGHT * Game.instance_.params.PIECE_WIDTH + 20))
+		var p_w = window.innerWidth;
+		var p_h = window.innerHeight;
+		if ((p_w < Game.i_.config.BOARD_WIDTH * Game.i_.params.PIECE_WIDTH + 20) ||
+			(p_h < Game.i_.config.BOARD_HEIGHT * Game.i_.params.PIECE_WIDTH + 20))
 		{
 			Game.params.PIECE_WIDTH = 16;
 		}
 
-		this.scoreDivEl = document.createElement('div');
-		this.scoreDivEl.className = Game.classes.SCORE;
-		this.scoreDivEl.style.width = Game.instance_.config.BOARD_WIDTH * Game.instance_.params.PIECE_WIDTH + 'px';
+		var sdEl = document.createElement('div');
+		sdEl.className = Game.classes.SCORE;
+		sdEl.style.width = Game.i_.config.BOARD_WIDTH * Game.i_.params.PIECE_WIDTH + 'px';
 
-		this.highscoreDiv = document.createElement('div');
-		this.highscoreDiv.style.float = 'left';
+		var hsEl = document.createElement('div');
+		hsEl.style.float = 'left';
 
-		this.highScoreTextEl = document.createElement('label');
-		this.highScoreTextEl.innerHTML = 'Highscore: ';
-		this.highscoreDiv.appendChild(this.highScoreTextEl);
+		var hsT = document.createElement('label');
+		hsT.innerHTML = 'Highscore: ';
+		hsEl.appendChild(hsT);
 
-		this.highScoreEl = document.createElement('label');
-		this.highScoreEl.id = 'lblHighscore';
-		this.highScoreEl.innerHTML = '0';
-		this.highscoreDiv.appendChild(this.highScoreEl);
+		var hsL = document.createElement('label');
+		hsL.id = 'lblHighscore';
+		hsL.innerHTML = '0';
+		hsEl.appendChild(hsL);
 
-		this.scoreDivEl.appendChild(this.highscoreDiv);
+		sdEl.appendChild(hsEl);
 
-		this.scoreDiv = document.createElement('div');
-		this.scoreDiv.style.float = 'right';
+		var sEl = document.createElement('div');
+		sEl.style.float = 'right';
 
-		this.scoreTextEl = document.createElement('label');
-		this.scoreTextEl.innerHTML = 'Score: ';
-		this.scoreDiv.appendChild(this.scoreTextEl);
+		var sT = document.createElement('label');
+		sT.innerHTML = 'Score: ';
+		sEl.appendChild(sT);
 
-		this.scoreEl = document.createElement('label');
-		this.scoreEl.id = 'lblScore';
-		this.scoreEl.innerHTML = '0';
-		this.scoreDiv.appendChild(this.scoreEl);
+		var sL = document.createElement('label');
+		sL.id = 'lblScore';
+		sL.innerHTML = '0';
+		sEl.appendChild(sL);
 
-		this.scoreDivEl.appendChild(this.scoreDiv);
+		sdEl.appendChild(sEl);
 
-		this.rootDiv.appendChild(this.scoreDivEl);
+		rootDiv.appendChild(sdEl);
 
-		this.gameEl = document.createElement('div');
-		this.gameEl.className = Game.classes.CONTAINER;
-		this.rootDiv.appendChild(this.gameEl);
+		var gameEl = document.createElement('div');
+		gameEl.className = Game.classes.CONTAINER;
+		rootDiv.appendChild(gameEl);
 
-		this.rootDiv.style.width = (Game.instance_.config.BOARD_WIDTH * Game.instance_.params.PIECE_WIDTH) + 'px';
+		rootDiv.style.width = (Game.i_.config.BOARD_WIDTH * Game.i_.params.PIECE_WIDTH) + 'px';
 
-		Game.instance_.containerElement = this.gameEl;
-		Game.instance_.containerElement.style.width = (Game.instance_.config.BOARD_WIDTH * Game.instance_.params.PIECE_WIDTH) + 'px';
-		Game.instance_.containerElement.style.height = (Game.instance_.config.BOARD_HEIGHT * Game.instance_.params.PIECE_WIDTH) + 'px';
+		Game.i_.containerElement = gameEl;
+		Game.i_.containerElement.style.width = (Game.i_.config.BOARD_WIDTH * Game.i_.params.PIECE_WIDTH) + 'px';
+		Game.i_.containerElement.style.height = (Game.i_.config.BOARD_HEIGHT * Game.i_.params.PIECE_WIDTH) + 'px';
 
-		this.scoreGameProgressEl = document.createElement('div');
-		this.scoreGameProgressEl.className = Game.classes.PROGRESS;
-		this.scoreGameProgressEl.style.width = Game.instance_.config.BOARD_WIDTH * Game.instance_.params.PIECE_WIDTH + 'px';
+		var spEl = document.createElement('div');
+		spEl.className = Game.classes.PROGRESS;
+		spEl.style.width = Game.i_.config.BOARD_WIDTH * Game.i_.params.PIECE_WIDTH + 'px';
 
-		this.progressEl = document.createElement('label');
-		this.progressEl.id = 'lblStatus';
-		this.progressEl.innerHTML = 'Press space to start game';
-		this.scoreGameProgressEl.appendChild(this.progressEl);
+		var pEl = document.createElement('label');
+		pEl.id = 'lblStatus';
+		pEl.innerHTML = 'Press space to start game';
+		spEl.appendChild(pEl);
 
-		this.rootDiv.appendChild(this.scoreGameProgressEl);
+		rootDiv.appendChild(spEl);
 
-		Game.instance_.init();
+		Game.i_.init();
 	}
 	window['Game'] = Game;
 
@@ -120,7 +120,7 @@
 		FPS: 35,
 		CURRENT_FRAME: 0,
 		STARTED: false,
-		DIRECTION: Direction.right,
+		DIRECTION: Dir.right,
 		PIECE_WIDTH: 32,
 		CAN_MOVE: true,
 		NEXT_MOVE: null,
@@ -161,9 +161,9 @@
 	   */
 		init: function () {
 			document.addEventListener('keydown', function(e) {
-				Game.instance_.keyPressAction(e);
-			}.bind(Game.instance_));
-			Game.instance_.board = new Board();
+				Game.i_.keyPressAction(e);
+			}.bind(Game.i_));
+			Game.i_.board = new Board();
 		},
 
 		/**
@@ -173,47 +173,47 @@
 		*  this.gameProress();
 		*/
 		gameProgress: function() {
-			if (Game.instance_.params.CURRENT_FRAME == Game.instance_.params.LEVELS[Game.instance_.params.SPEED - 1]) //Math.ceil(Game.instance_.params.FPS - Game.instance_.params.SPEED * 3)) //Math.ceil(Game.instance_.params.FPS / Game.instance_.params.SPEED))
+			if (Game.i_.params.CURRENT_FRAME == Game.i_.params.LEVELS[Game.i_.params.SPEED - 1])
 			{
-				Game.instance_.params.CAN_MOVE = true;
+				Game.i_.params.CAN_MOVE = true;
 
-				var firstPosition = Game.instance_.player.position[0];
-				var newPosition;
+				var fp = Game.i_.player.pos[0]; // first position
+				var np; // new position
 
-				switch (Game.instance_.params.DIRECTION)
+				switch (Game.i_.params.DIRECTION)
 				{
-					case Direction.up:
-						newPosition = { x: firstPosition.x, y: firstPosition.y - 1 };
+					case Dir.up:
+						np = { x: fp.x, y: fp.y - 1 };
 						break;
-					case Direction.down:
-						newPosition = { x: firstPosition.x, y: firstPosition.y + 1 };
+					case Dir.down:
+						np = { x: fp.x, y: fp.y + 1 };
 						break;
-					case Direction.left:
-						newPosition = { x: firstPosition.x - 1, y: firstPosition.y };
+					case Dir.left:
+						np = { x: fp.x - 1, y: fp.y };
 						break;
 					default:
-						newPosition = { x: firstPosition.x + 1, y: firstPosition.y };
+						np = { x: fp.x + 1, y: fp.y };
 				}
 
-				Game.instance_.player.position.unshift(newPosition);
-				if (newPosition.x == Game.instance_.food.position.x && newPosition.y == Game.instance_.food.position.y) Game.instance_.player.expandPlayer(newPosition);
+				Game.i_.player.pos.unshift(np);
+				if (np.x == Game.i_.food.pos.x && np.y == Game.i_.food.pos.y) Game.i_.player.expandPlayer(np);
 				else {
-					var lastItem = Game.instance_.player.position.pop();
-					Game.instance_.player.movePlayerPiece(newPosition, lastItem);
+					var lp = Game.i_.player.pos.pop(); // last position item
+					Game.i_.player.movePlayerPiece(np, lp);
 				}
-				Game.instance_.params.CURRENT_FRAME = 0;
+				Game.i_.params.CURRENT_FRAME = 0;
 
-				if (Game.instance_.params.NEXT_MOVE)
+				if (Game.i_.params.NEXT_MOVE)
 				{
-					Game.instance_.params.DIRECTION = Game.instance_.params.NEXT_MOVE;
-					Game.instance_.params.NEXT_MOVE = null;
+					Game.i_.params.DIRECTION = Game.i_.params.NEXT_MOVE;
+					Game.i_.params.NEXT_MOVE = null;
 				}
 			}
 
-			if (Game.instance_.params.STARTED)
+			if (Game.i_.params.STARTED)
 			{
-				Game.instance_.params.CURRENT_FRAME++;
-				window.requestAnimationFrame(Game.instance_.gameProgress.bind(this));
+				Game.i_.params.CURRENT_FRAME++;
+				window.requestAnimationFrame(Game.i_.gameProgress.bind(this));
 			}
 		},
 
@@ -221,7 +221,7 @@
 		* Function for key events actions
 		*
 		* @example
-		*  this.keyPressAction();
+		*  this.keyPressAction(e);
 		*
 		* @param e {Event} key press event
 		*/
@@ -229,73 +229,67 @@
 			switch(e.which) {
 				case 32: // SPACE
 					e.preventDefault();
-					if (!Game.instance_.params.STARTED)
+					if (!Game.i_.params.STARTED)
 					{
-						Game.instance_.params.STARTED = true;
-						var pieceList = document.getElementsByClassName(Game.classes.PLAYER);
-						if (pieceList.length > 0) while (pieceList[0]) { Game.instance_.containerElement.removeChild(pieceList[0]); }
+						Game.i_.params.STARTED = true;
+						var l = document.getElementsByClassName(Game.classes.PLAYER); // piece list
+						if (l.length > 0) while (l[0]) { Game.i_.containerElement.removeChild(l[0]); }
 
-						var foodItem = document.getElementById('food_item');
-						if (foodItem) Game.instance_.containerElement.removeChild(foodItem);
+						var fi = document.getElementById('food_item'); // food item
+						if (fi) Game.i_.containerElement.removeChild(fi);
 
 						document.getElementById('lblScore').innerHTML = 0;
-						Game.instance_.params.SPEED = Game.instance_.config.SPEED;
-						Game.instance_.params.CAN_MOVE = true;
-						Game.instance_.params.DIRECTION = Direction.right;
-						Game.instance_.player = new Player();
-						Game.instance_.food = new Food();
-						document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.instance_.params.SPEED;
-						Game.instance_.gameProgress();
+						Game.i_.params.SPEED = Game.i_.config.SPEED;
+						Game.i_.params.CAN_MOVE = true;
+						Game.i_.params.DIRECTION = Dir.right;
+						Game.i_.player = new Player();
+						Game.i_.food = new Food();
+						document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.i_.params.SPEED;
+						Game.i_.gameProgress();
 					}
 					break;
 				case 37: // LEFT ARROW
 				case 39: // RIGHT ARROW
 					e.preventDefault();
-					if (Game.instance_.params.STARTED && Game.instance_.params.DIRECTION != Direction.left && Game.instance_.params.DIRECTION != Direction.right)
+					if (Game.i_.params.STARTED && Game.i_.params.DIRECTION != Dir.left && Game.i_.params.DIRECTION != Dir.right)
 					{
-						if (Game.instance_.params.CAN_MOVE)
+						if (Game.i_.params.CAN_MOVE)
 						{
-							Game.instance_.params.NEXT_MOVE = null;
-							Game.instance_.params.CAN_MOVE = false;
-							Game.instance_.params.DIRECTION = e.which == 37 ? Direction.left : Direction.right;
+							Game.i_.params.NEXT_MOVE = null;
+							Game.i_.params.CAN_MOVE = false;
+							Game.i_.params.DIRECTION = e.which == 37 ? Dir.left : Dir.right;
 						}
-						else {
-							Game.instance_.params.NEXT_MOVE = e.which == 37 ? Direction.left : Direction.right;
-						}
-						//Game.instance_.params.CURRENT_FRAME = Game.instance_.params.FPS / Game.instance_.params.SPEED;
+						else  Game.i_.params.NEXT_MOVE = e.which == 37 ? Dir.left : Dir.right;
 					}
 					break;
 				case 38: // UP ARROW
 				case 40: // DOWN ARROW
 					e.preventDefault();
-					if (Game.instance_.params.STARTED && Game.instance_.params.DIRECTION != Direction.down && Game.instance_.params.DIRECTION != Direction.up)
+					if (Game.i_.params.STARTED && Game.i_.params.DIRECTION != Dir.down && Game.i_.params.DIRECTION != Dir.up)
 					{
-						if (Game.instance_.params.CAN_MOVE)
+						if (Game.i_.params.CAN_MOVE)
 						{
-							Game.instance_.params.NEXT_MOVE = null;
-							Game.instance_.params.CAN_MOVE = false;
-							Game.instance_.params.DIRECTION = e.which == 38 ? Direction.up : Direction.down;
+							Game.i_.params.NEXT_MOVE = null;
+							Game.i_.params.CAN_MOVE = false;
+							Game.i_.params.DIRECTION = e.which == 38 ? Dir.up : Dir.down;
 						}
-						else {
-							Game.instance_.params.NEXT_MOVE = e.which == 38 ? Direction.up : Direction.down;
-						}
-						//Game.instance_.params.CURRENT_FRAME = Game.instance_.params.FPS / Game.instance_.params.SPEED;
+						else Game.i_.params.NEXT_MOVE = e.which == 38 ? Dir.up : Dir.down;
 					}
 					break;
 				case 88: // X key
-					if (Game.instance_.params.SPEED < 10 && Game.instance_.params.STARTED)
+					if (Game.i_.params.SPEED < 10 && Game.i_.params.STARTED)
 					{
-						 Game.instance_.params.SPEED++;
-						 Game.instance_.params.CURRENT_FRAME = 0;
-						 document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.instance_.params.SPEED;
+						 Game.i_.params.SPEED++;
+						 Game.i_.params.CURRENT_FRAME = 0;
+						 document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.i_.params.SPEED;
 				 	}
 					break;
 				case 90: // Z key
-					if (Game.instance_.params.SPEED > 1 && Game.instance_.params.STARTED)
+					if (Game.i_.params.SPEED > 1 && Game.i_.params.STARTED)
 					{
-						Game.instance_.params.SPEED--;
-						Game.instance_.params.CURRENT_FRAME = 0;
-						document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.instance_.params.SPEED;
+						Game.i_.params.SPEED--;
+						Game.i_.params.CURRENT_FRAME = 0;
+						document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.i_.params.SPEED;
 					}
 					break;
 			}
@@ -309,8 +303,8 @@
 	*  var player = new Player();
 	*/
 	function Player() {
-		var centerY =  Math.ceil((Game.instance_.config.BOARD_HEIGHT - 2) / 2);
-		this.position = [{x: 4, y: centerY}, {x: 3, y: centerY} , {x: 2, y: centerY}]; // [{x: 1, y: 1}, {x: 2, y: 1} , {x: 3, y: 1}];
+		var cY =  Math.ceil((Game.i_.config.BOARD_HEIGHT - 2) / 2); // center y of game board
+		this.pos = [{x: 4, y: cY}, {x: 3, y: cY} , {x: 2, y: cY}];
 		this.init();
 	}
 
@@ -325,29 +319,26 @@
 	   *  this.init();
 	   */
 		init: function() {
-			for(var i = 0; i < this.position.length; i++)
-			{
-				this.drawPlayer(this.position[i]);
-			}
+			for(var i = 0; i < this.pos.length; i++) this.drawPlayer(this.pos[i]);
 		},
 
 		/**
 		* Function for move player piece
 		*
 		* @example
-		*  this.movePlayerPiece(nextPosition, lastPosition);
+		*  this.movePlayerPiece({x: 3, y: 1}, {x: 1, y: 1});
 		*
-		* @param nextPosition {Object} position for next player piece
-		* @param lastPosition {Object} position for last player piece
+		* @param n {Object} position for next player piece
+		* @param l {Object} position for last player piece
 		*/
-		movePlayerPiece: function(nextPosition, lastPosition) {
-			collisionDetected = this.checkForCollision(nextPosition);
-			if (!collisionDetected)
+		movePlayerPiece: function(n, l) {
+			coll = this.checkForCollision(n); // check for collision
+			if (!coll)
 			{
-				var playerPiece = document.getElementById('player_' + lastPosition.x + '_' + lastPosition.y);
-				playerPiece.id = 'player_' + nextPosition.x + '_' + nextPosition.y;
-				playerPiece.style.top = nextPosition.y * Game.instance_.params.PIECE_WIDTH;
-				playerPiece.style.left = nextPosition.x * Game.instance_.params.PIECE_WIDTH;
+				var pl = document.getElementById('p_' + l.x + '_' + l.y); // player piece
+				pl.id = 'p_' + n.x + '_' + n.y;
+				pl.style.top = n.y * Game.i_.params.PIECE_WIDTH;
+				pl.style.left = n.x * Game.i_.params.PIECE_WIDTH;
 			}
 		},
 
@@ -355,46 +346,46 @@
 		* Function for expand player piece after food eating
 		*
 		* @example
-		*  this.expandPlayer(nextPosition);
+		*  this.expandPlayer({x: 1, y: y});
 		*
-		* @param nextPosition {Object} position for next player piece
+		* @param p {Object} position for next player piece
 		*/
-		expandPlayer: function(nextPosition) {
-			var lblScore = document.getElementById('lblScore');
-			score = parseInt(lblScore.innerHTML) + 1;
-			lblScore.innerHTML = parseInt(lblScore.innerHTML) + 1;
+		expandPlayer: function(p) {
+			var el = document.getElementById('lblScore');
+			var score = parseInt(el.innerHTML) + 1;
+			el.innerHTML = parseInt(el.innerHTML) + 1;
 
-			if (score == Game.instance_.params.LEVEL_UP[Game.instance_.params.SPEED - 1] && Game.instance_.params.SPEED < 10)
+			if (score == Game.i_.params.LEVEL_UP[Game.i_.params.SPEED - 1] && Game.i_.params.SPEED < 10)
 			{
-				Game.instance_.params.SPEED++;
-				Game.instance_.params.CURRENT_FRAME = 0;
-				document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.instance_.params.SPEED;
+				Game.i_.params.SPEED++;
+				Game.i_.params.CURRENT_FRAME = 0;
+				document.getElementById('lblStatus').innerHTML = 'Game in progress, level: ' + Game.i_.params.SPEED;
 			}
 
-			this.drawPlayer(nextPosition);
-			Game.instance_.containerElement.removeChild(document.getElementById('food_item'));
-			Game.instance_.food = new Food();
+			this.drawPlayer(p);
+			Game.i_.containerElement.removeChild(document.getElementById('food_item'));
+			Game.i_.food = new Food();
 		},
 
 		/**
 		* Function for check if there is a obstacle on next position
 		*
 		* @example
-		*  this.checkForCollision(nextPosition);
+		*  this.checkForCollision({x: 1, y: 1});
 		*
-		* @param nextPosition {Object} next player piece position
+		* @param p {Object} next player piece position
 		*/
-		checkForCollision: function(nextPosition) {
-			var player_piece = document.getElementById('player_' + nextPosition.x + '_' + nextPosition.y);
-			if ((Game.instance_.params.DIRECTION == Direction.up && nextPosition.y == 0) ||
-				(Game.instance_.params.DIRECTION == Direction.down && nextPosition.y == Game.instance_.config.BOARD_HEIGHT - 1) ||
-				(Game.instance_.params.DIRECTION == Direction.right && nextPosition.x == Game.instance_.config.BOARD_WIDTH - 1) ||
-				(Game.instance_.params.DIRECTION == Direction.left && nextPosition.x == 0) || player_piece)
+		checkForCollision: function(p) {
+			var pp = document.getElementById('p_' + p.x + '_' + p.y); // player piece item
+			if ((Game.i_.params.DIRECTION == Dir.up && p.y == 0) ||
+				(Game.i_.params.DIRECTION == Dir.down && p.y == Game.i_.config.BOARD_HEIGHT - 1) ||
+				(Game.i_.params.DIRECTION == Dir.right && p.x == Game.i_.config.BOARD_WIDTH - 1) ||
+				(Game.i_.params.DIRECTION == Dir.left && p.x == 0) || pp)
 			{
-				Game.instance_.params.STARTED = false;
+				Game.i_.params.STARTED = false;
 
-				var playerHead = document.getElementById('player_' + Game.instance_.player.position[1].x + '_' + Game.instance_.player.position[1].y);
-				playerHead.style.backgroundColor = '#aa0000';
+				var ph = document.getElementById('p_' + Game.i_.player.pos[1].x + '_' + Game.i_.player.pos[1].y); // player head
+				ph.style.backgroundColor = '#aa0000';
 
 				var score = document.getElementById('lblScore');
 				var highScore = document.getElementById('lblHighscore');
@@ -411,19 +402,19 @@
 		* Function for drwaing player piece
 		*
 		* @example
-		*  this.drawItem(position);
+		*  this.drawItem({x: 1, y: 1});
 		*
-		* @param position {Object} position of piece for adding
+		* @param p {Object} position of piece for adding
 		*/
-		drawPlayer: function(position) {
-			this.containerEl = document.createElement('div');
-			this.containerEl.id = 'player_' + position.x + '_' + position.y;
-			this.containerEl.className = Game.classes.PLAYER;
-			this.containerEl.style.width = Game.instance_.params.PIECE_WIDTH + 'px';
-			this.containerEl.style.height = Game.instance_.params.PIECE_WIDTH + 'px';
-			this.containerEl.style.top = position.y * Game.instance_.params.PIECE_WIDTH;
-			this.containerEl.style.left = position.x * Game.instance_.params.PIECE_WIDTH;
-			Game.instance_.containerElement.appendChild(this.containerEl);
+		drawPlayer: function(p) {
+			var el = document.createElement('div');
+			el.id = 'p_' + p.x + '_' + p.y;
+			el.className = Game.classes.PLAYER;
+			el.style.width = Game.i_.params.PIECE_WIDTH + 'px';
+			el.style.height = Game.i_.params.PIECE_WIDTH + 'px';
+			el.style.top = p.y * Game.i_.params.PIECE_WIDTH;
+			el.style.left = p.x * Game.i_.params.PIECE_WIDTH;
+			Game.i_.containerElement.appendChild(el);
 		}
 	};
 
@@ -435,7 +426,6 @@
 	*/
 	function Board()
 	{
-		//this.parent = parent;
 		this.init();
 	}
 
@@ -450,10 +440,10 @@
 	   *  this.init();
 	   */
 		init: function() {
-			this.drawBorder(0, 0, Game.instance_.config.BOARD_WIDTH * Game.instance_.params.PIECE_WIDTH, Game.instance_.params.PIECE_WIDTH); // draw top border
-			this.drawBorder((Game.instance_.config.BOARD_HEIGHT - 1) * Game.instance_.params.PIECE_WIDTH, 0, Game.instance_.config.BOARD_WIDTH * Game.instance_.params.PIECE_WIDTH, Game.instance_.params.PIECE_WIDTH); // draw bottom border
-			this.drawBorder(0, 0, Game.instance_.params.PIECE_WIDTH, Game.instance_.config.BOARD_HEIGHT * Game.instance_.params.PIECE_WIDTH); // draw left border
-			this.drawBorder(0, (Game.instance_.config.BOARD_WIDTH - 1) * Game.instance_.params.PIECE_WIDTH, Game.instance_.params.PIECE_WIDTH, Game.instance_.config.BOARD_HEIGHT * Game.instance_.params.PIECE_WIDTH); // draw right border
+			this.drawBorder(0, 0, Game.i_.config.BOARD_WIDTH * Game.i_.params.PIECE_WIDTH, Game.i_.params.PIECE_WIDTH); // draw top border
+			this.drawBorder((Game.i_.config.BOARD_HEIGHT - 1) * Game.i_.params.PIECE_WIDTH, 0, Game.i_.config.BOARD_WIDTH * Game.i_.params.PIECE_WIDTH, Game.i_.params.PIECE_WIDTH); // draw bottom border
+			this.drawBorder(0, 0, Game.i_.params.PIECE_WIDTH, Game.i_.config.BOARD_HEIGHT * Game.i_.params.PIECE_WIDTH); // draw left border
+			this.drawBorder(0, (Game.i_.config.BOARD_WIDTH - 1) * Game.i_.params.PIECE_WIDTH, Game.i_.params.PIECE_WIDTH, Game.i_.config.BOARD_HEIGHT * Game.i_.params.PIECE_WIDTH); // draw right border
 		},
 
 		/**
@@ -462,19 +452,19 @@
 	   * @example
 	   *  this.drawBorder(0, 0, 100, 100);
 	   *
-	   * @param top {Number} border top position in pixels
-		* @param left {Number} border left position in pixels
-		* @param width {Number} border width position in pixels
-		* @param height {Number} border height position in pixels
+	   * @param t {Number} border top position in pixels
+		* @param l {Number} border left position in pixels
+		* @param w {Number} border width position in pixels
+		* @param h {Number} border height position in pixels
 	   */
-		drawBorder: function(top, left, width, height) {
-			this.containerEl = document.createElement('div');
-			this.containerEl.className = Game.classes.BORDER;
-			this.containerEl.style.top = top + 'px';
-			this.containerEl.style.left = left + 'px';
-			this.containerEl.style.width = width + 'px';
-			this.containerEl.style.height = height + 'px';
-			Game.instance_.containerElement.appendChild(this.containerEl);
+		drawBorder: function(t, l, w, h) {
+			var el = document.createElement('div');
+			el.className = Game.classes.BORDER;
+			el.style.top = t + 'px';
+			el.style.left = l + 'px';
+			el.style.width = w + 'px';
+			el.style.height = h + 'px';
+			Game.i_.containerElement.appendChild(el);
 		}
 	}
 
@@ -500,26 +490,24 @@
 		*  this.init();
 		*/
 		init: function() {
-			var emptyFieldsArray = [];
-			for (var i = 0; i < Game.instance_.config.BOARD_HEIGHT - 2; i++)
-				for (var j = 0; j < Game.instance_.config.BOARD_WIDTH - 2; j++)
-					if (!document.getElementById('player_' + (j + 1) + '_' + (i + 1))) emptyFieldsArray.push({ x: j + 1, y: i + 1 });
+			var arr = [];
+			for (var i = 0; i < Game.i_.config.BOARD_HEIGHT - 2; i++)
+				for (var j = 0; j < Game.i_.config.BOARD_WIDTH - 2; j++)
+					if (!document.getElementById('p_' + (j + 1) + '_' + (i + 1))) arr.push({ x: j + 1, y: i + 1 });
 
-			var randomField = Math.floor((Math.random() * (emptyFieldsArray.length - 1)));
-			var randomPos = {x: 1, y: 1};
-			if (emptyFieldsArray.length > 0) randomPos = emptyFieldsArray[randomField];
+			var rf = Math.floor((Math.random() * (arr.length - 1)));
+			var rnd = {x: 1, y: 1};
+			if (arr.length > 0) rnd = arr[rf];
 
-			this.position = { x: randomPos.x, y: randomPos.y };
-			this.containerEl = document.createElement('div');
-			this.containerEl.id = 'food_item';
-			this.containerEl.className = Game.classes.FOOD;
-			this.containerEl.style.top = (randomPos.y * Game.instance_.params.PIECE_WIDTH) + 'px';
-			this.containerEl.style.left = (randomPos.x * Game.instance_.params.PIECE_WIDTH) + 'px';
-			// this.containerEl.style.top = (randomY * Game.instance_.params.PIECE_WIDTH) + 'px';
-			// this.containerEl.style.left = (randomX * Game.instance_.params.PIECE_WIDTH) + 'px';
-			this.containerEl.style.width = Game.instance_.params.PIECE_WIDTH + 'px';
-			this.containerEl.style.height = Game.instance_.params.PIECE_WIDTH + 'px';
-			Game.instance_.containerElement.appendChild(this.containerEl);
+			this.pos = { x: rnd.x, y: rnd.y };
+			var el = document.createElement('div');
+			el.id = 'food_item';
+			el.className = Game.classes.FOOD;
+			el.style.top = (rnd.y * Game.i_.params.PIECE_WIDTH) + 'px';
+			el.style.left = (rnd.x * Game.i_.params.PIECE_WIDTH) + 'px';
+			el.style.width = Game.i_.params.PIECE_WIDTH + 'px';
+			el.style.height = Game.i_.params.PIECE_WIDTH + 'px';
+			Game.i_.containerElement.appendChild(el);
 		}
 	}
 })();
