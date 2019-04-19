@@ -54,7 +54,7 @@ new Game('#game-container', {SPEED: 5, BOARD_WIDTH: 20, BOARD_HEIGHT: 10});
 Available options:
 - **SPEED** - initial speed for game start (default: 1, range: 1-10),
 - **BOARD_WIDTH** - width of the game board (default: 20, range: 10-40),
-- **DOWN ARROW** - height of the game board (default: 10, range: 5-20).
+- **BOARD_HEIGHT** - height of the game board (default: 10, range: 5-20).
 
 ## To be done
 - game graphics
