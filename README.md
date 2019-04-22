@@ -1,5 +1,5 @@
 # Retro snake - javascript game
-Retro snake game created in javascript.
+Retro snake game created in javascript. You can play demo on [Snake game](https://snake-gamejs.herokuapp.com/).
 
 ## Table of Contents
 

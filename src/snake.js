@@ -51,6 +51,7 @@
 			(p_h < Game.i_.config.BOARD_HEIGHT * Game.i_.params.PIECE_WIDTH + 20))
 		{
 			Game.params.PIECE_WIDTH = 16;
+			rootDiv.className = 'low-res';
 		}
 
 		var sdEl = document.createElement('div');
@@ -124,7 +125,7 @@
 		PIECE_WIDTH: 32,
 		CAN_MOVE: true,
 		NEXT_MOVE: null,
-		LEVELS: [30, 35, 25, 20, 15, 12, 10, 8, 6, 4],
+		LEVELS: [30, 25, 20, 17, 14, 11, 9, 7, 5, 3], //[35, 30, 25, 20, 15, 12, 10, 8, 6, 4],
 		LEVEL_UP: [5, 10, 17, 25, 35, 50, 75, 110, 150]
 	}
 
@@ -144,9 +145,23 @@
 			CONTAINER: 'container',
 			SCORE: 'score',
 			PROGRESS: 'progress',
-			PLAYER: 'sprite_background',
 			BORDER: 'border_background',
-			FOOD: 'food_background'
+			FOOD: 'sprite_background sprite_background_food',
+			PLAYER: 'sprite_background',
+			HEAD_R: 'sprite_background sprite_background_head',
+			HEAD_L: 'sprite_background sprite_background_head rotate180',
+			HEAD_U: 'sprite_background sprite_background_head rotate270',
+			HEAD_D: 'sprite_background sprite_background_head rotate90',
+			TAIL_R: 'sprite_background sprite_background_tail',
+			TAIL_L: 'sprite_background sprite_background_tail rotate180',
+			TAIL_U: 'sprite_background sprite_background_tail rotate270',
+			TAIL_D: 'sprite_background sprite_background_tail rotate90',
+			BODY_H: 'sprite_background sprite_background_body',
+			BODY_V: 'sprite_background sprite_background_body rotate90',
+			BODY_RU: 'sprite_background sprite_background_body_ru',
+			BODY_RD: 'sprite_background sprite_background_body_lu rotate180',
+			BODY_LU: 'sprite_background sprite_background_body_lu',
+			BODY_LD: 'sprite_background sprite_background_body_ru rotate180'
     };
 
 	/**
@@ -320,6 +335,10 @@
 	   */
 		init: function() {
 			for(var i = 0; i < this.pos.length; i++) this.drawPlayer(this.pos[i]);
+			var l = this.pos[this.pos.length - 1];
+			var f = this.pos[0];
+			document.getElementById('p_' + f.x + '_' + f.y).className = Game.classes.HEAD_R;
+			document.getElementById('p_' + l.x + '_' + l.y).className = Game.classes.TAIL_R;
 		},
 
 		/**
@@ -339,7 +358,66 @@
 				pl.id = 'p_' + n.x + '_' + n.y;
 				pl.style.top = n.y * Game.i_.params.PIECE_WIDTH;
 				pl.style.left = n.x * Game.i_.params.PIECE_WIDTH;
+
+				this.updateHeadGraphic();
+				this.updateGraphic();
+				this.updateTailGraphic();
 			}
+		},
+
+		/**
+		* Function for update player Head graphic. Change graphic for piece at 0 index.
+		*
+		* @example
+		*  this.updateHeadGraphic();
+		*/
+		updateHeadGraphic: function() {
+			var h = this.pos[0];
+			var cl = '';
+			switch (Game.params.DIRECTION) {
+				case Dir.up: cl = Game.classes.HEAD_U; break;
+				case Dir.down: cl = Game.classes.HEAD_D; break;
+				case Dir.left:  cl = Game.classes.HEAD_L; break;
+				default: cl = Game.classes.HEAD_R;
+			}
+			document.getElementById('p_' + h.x + '_' + h.y).className = cl;
+		},
+
+		/**
+		* Function for update player Tail graphic. Change graphic for piece at last index.
+		*
+		* @example
+		*  this.updateTailGraphic();
+		*/
+		updateTailGraphic: function() {
+			var l = this.pos[this.pos.length - 1];
+			var p = this.pos[this.pos.length - 2];
+			var cl = Game.classes.TAIL_R;
+			if (l.x > p.x) cl = Game.classes.TAIL_L;
+			else if (l.y > p.y) cl = Game.classes.TAIL_U;
+			else if (l.y < p.y) cl = Game.classes.TAIL_D;
+			document.getElementById('p_' + l.x + '_' + l.y).className = cl;
+		},
+
+		/**
+		* Function for update player neck graphic. Change graphic for piece at 1 index.
+		*
+		* @example
+		*  this.updateGraphic();
+		*/
+		updateGraphic: function() {
+			var s = this.pos[2]; //[p + 1];
+			var c = this.pos[1]; //[p];
+			var n = this.pos[0]; //[p - 1];
+
+			var cl;
+			if ((c.x == s.x + 1 && c.y == n.y + 1) || (c.y == s.y + 1 && c.x == n.x + 1)) cl = Game.classes.BODY_RU;
+			else if ((c.x == s.x - 1 && c.y == n.y + 1) || (c.y == s.y + 1 && c.x == n.x - 1)) cl = Game.classes.BODY_LU;
+			else if ((c.y == s.y - 1 && c.x == n.x - 1) || (c.x == s.x - 1 && c.y == n.y - 1)) cl = Game.classes.BODY_LD;
+			else if ((c.x == s.x + 1 && c.y == n.y - 1) || (c.y == s.y - 1 && c.x == n.x + 1)) cl = Game.classes.BODY_RD;
+			else if (Game.params.DIRECTION == Dir.up || Game.params.DIRECTION == Dir.down) cl = Game.classes.BODY_V;
+			else cl = Game.classes.BODY_H;
+			document.getElementById('p_' + c.x + '_' + c.y).className = cl;
 		},
 
 		/**
@@ -365,6 +443,9 @@
 			this.drawPlayer(p);
 			Game.i_.containerElement.removeChild(document.getElementById('food_item'));
 			Game.i_.food = new Food();
+
+			this.updateHeadGraphic();
+			this.updateGraphic(1);
 		},
 
 		/**
@@ -383,9 +464,8 @@
 				(Game.i_.params.DIRECTION == Dir.left && p.x == 0) || pp)
 			{
 				Game.i_.params.STARTED = false;
-
 				var ph = document.getElementById('p_' + Game.i_.player.pos[1].x + '_' + Game.i_.player.pos[1].y); // player head
-				ph.style.backgroundColor = '#aa0000';
+				ph.className = ph.className.replace('_head', '_head_dead');
 
 				var score = document.getElementById('lblScore');
 				var highScore = document.getElementById('lblHighscore');
@@ -409,13 +489,13 @@
 		drawPlayer: function(p) {
 			var el = document.createElement('div');
 			el.id = 'p_' + p.x + '_' + p.y;
-			el.className = Game.classes.PLAYER;
+			el.className = Game.classes.BODY_H;
 			el.style.width = Game.i_.params.PIECE_WIDTH + 'px';
 			el.style.height = Game.i_.params.PIECE_WIDTH + 'px';
 			el.style.top = p.y * Game.i_.params.PIECE_WIDTH;
 			el.style.left = p.x * Game.i_.params.PIECE_WIDTH;
 			Game.i_.containerElement.appendChild(el);
-		}
+		},
 	};
 
 	/**
