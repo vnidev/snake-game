@@ -57,4 +57,4 @@ Available options:
 - **BOARD_HEIGHT** - height of the game board (default: 10, range: 5-20).
 
 ## To be done
-- game graphics
+- ~~game graphics~~

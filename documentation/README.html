@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+   <title>Retro snake game</title>
+   <style>
+      body {
+         font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+         font-size: 16px;
+         line-height: 1.6;
+         word-wrap: break-word;
+         width: 728px;
+         max-width: 728px;
+         box-sizing: border-box;
+         margin-left: auto;
+         margin-right: auto;
+      }
+
+      body img {
+         max-width: 700px;
+      }
+
+      body a {
+         color: #0374B4;
+      }
+
+      body a:hover {
+         color: #FEA557;
+      }
+
+      .line-through {
+         text-decoration: line-through;
+      }
+   </style>
+
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+   <script>
+      hljs.initHighlightingOnLoad();
+   </script>
+</head>
+<body>
+   <h1 id="retro-snake---javascript-game">Retro snake - javascript game</h1>
+   <p>Retro snake game created in javascript. You can play demo on <a href="https://snake-gamejs.herokuapp.com/">Snake game</a>.</p>
+   <h2 id="table-of-contents">Table of Contents</h2>
+   <ul>
+   <li><a href="#about">About</a></li>
+   <li><a href="#quick-start">Quick Start</a></li>
+   <li><a href="#documentation">Documentation</a></li>
+   <li><a href="#to-be-done">To be done</a></li>
+   </ul>
+   <h2 id="about">About</h2>
+   <div class="figure"><img src="game_screen.jpg" alt="Snake game" /></div>
+   <p>For those who don't know the rules of the game (if they exists), the rules are simple. You need to eat food to grow and avoid hitting the walls and yourself. The bigger you are, the more difficult will be. So, take fun and good luck.</p>
+   <h2 id="quick-start">Quick start</h2>
+   <p>You need to include <strong>snake.css</strong> and <strong>snake.min.js</strong> in your head tag:</p>
+   <pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;link</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="ot"> href=</span><span class="st">&quot;./styles/snake.css&quot;</span> <span class="kw">/&gt;</span>
+<span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;./dist/snake.min.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span></code></pre>
+   <p>Then add game container to body tag:</p>
+   <pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;game-container&quot;</span><span class="kw">&gt;&lt;/div&gt;</span></code></pre>
+   <p>Then you need to initialize game in script tag:</p>
+   <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="fu">onDocumentLoad</span>() {
+   <span class="kw">new</span> <span class="fu">Game</span>(<span class="st">&#39;#game-container&#39;</span>);
+}
+<span class="ot">document</span>.<span class="fu">addEventListener</span>(<span class="st">&#39;DOMContentLoaded&#39;</span>, onDocumentLoad);</code></pre>
+   <p>And that's it. See <a href="#documentation">Documentation</a> section for controls and options.</p>
+   <h2 id="documentation">Documentation</h2>
+   <h3 id="game-controls">Game controls</h3>
+   <ul>
+   <li><strong>SPACE BAR</strong> - start game or restart after game over,</li>
+   <li><strong>UP ARROW</strong> - move up,</li>
+   <li><strong>DOWN ARROW</strong> - move down,</li>
+   <li><strong>LEFT ARROW</strong> - move left,</li>
+   <li><strong>RIGHT ARROW</strong> - move right,</li>
+   <li><strong>Z</strong> - decrease game level/speed,</li>
+   <li><strong>X</strong> - increase game level/speed.</li>
+   </ul>
+   <h3 id="options">Options</h3>
+   <p>There is a few options that can be used to change game settings.</p>
+   <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">new</span> <span class="fu">Game</span>(<span class="st">&#39;#game-container&#39;</span>, {<span class="dt">SPEED</span>: <span class="dv">5</span>, <span class="dt">BOARD_WIDTH</span>: <span class="dv">20</span>, <span class="dt">BOARD_HEIGHT</span>: <span class="dv">10</span>});</code></pre>
+   <p>Available options: - <strong>SPEED</strong> - initial speed for game start (default: 1, range: 1-10), - <strong>BOARD_WIDTH</strong> - width of the game board (default: 20, range: 10-40), - <strong>BOARD_HEIGHT</strong> - height of the game board (default: 10, range: 5-20).</p>
+   <h2 id="to-be-done">To be done</h2>
+   <ul>
+   <li><del>game graphics</del></li>
+   </ul>
+</body>
+<html>
